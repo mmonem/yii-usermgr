@@ -27,7 +27,7 @@ class UsersController extends Controller
                 'rules' => [
                     [
                         'allow' => true,
-                        'actions' => ['index', 'view', 'create', 'update', 'change-password', 'delete'],
+                        'actions' => ['index', 'view', 'create', 'update', 'change-password', 'delete', 'roles'],
                         'roles' => ['users.manage'],
                     ],
                 ],
@@ -113,6 +113,29 @@ class UsersController extends Controller
      * @return mixed
      */
     public function actionChangePassword($id)
+    {
+        $userModel = $this->findModel($id);
+        $model = new ChangePasswordForm();
+        $model->email = $userModel->email;
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $userModel->setScenario('change-password');
+            $userModel->password = md5($model->password);
+            $userModel->save();
+            return $this->redirect(['view', 'id' => $userModel->uuid]);
+        }
+
+        return $this->render('change-password', [
+            'model' => $model,
+        ]);
+    }
+
+    /**
+     * Changes the roles for a user.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param string $id
+     * @return mixed
+     */
+    public function actionRoles($id)
     {
         $userModel = $this->findModel($id);
         $model = new ChangePasswordForm();

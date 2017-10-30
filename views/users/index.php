@@ -27,10 +27,13 @@ $this->params['breadcrumbs'][] = $this->title;
             'email:email',
             'name',
             [
-                'class' => 'yii\grid\ActionColumn', 'template'=>'{view} {update} {password} {delete}',
+                'class' => 'yii\grid\ActionColumn', 'template'=>'{view} {update} {roles} {password} {delete}',
                 'buttons'=> [
                     'password' => function ($url, $model, $key) {
                         return Html::a(Html::tag('span', '', ['class' => 'glyphicon glyphicon-lock']), Url::to(["/usersadmin/users/change-password", "id"=>$model->uuid]));
+                    },
+                    'roles' => function ($url, $model, $key) {
+                        return Html::a(Html::tag('span', '', ['class' => 'glyphicon glyphicon-ok']), Url::to(["/usersadmin/users/roles", "id"=>$model->uuid]));
                     },
                 ],
             ],
