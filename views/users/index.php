@@ -2,6 +2,7 @@
 
 use yii\helpers\Html;
 use yii\grid\GridView;
+use yii\helpers\Url;
 
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
@@ -25,8 +26,14 @@ $this->params['breadcrumbs'][] = $this->title;
             'uuid',
             'email:email',
             'name',
-
-            ['class' => 'yii\grid\ActionColumn'],
+            [
+                'class' => 'yii\grid\ActionColumn', 'template'=>'{view} {update} {password} {delete}',
+                'buttons'=> [
+                    'password' => function ($url, $model, $key) {
+                        return Html::a(Html::tag('span', '', ['class' => 'glyphicon glyphicon-lock']), Url::to(["/usersadmin/users/change-password", "id"=>$model->uuid]));
+                    },
+                ],
+            ],
         ],
     ]); ?>
 </div>

@@ -2,9 +2,11 @@
 
 namespace app\modules\usersadmin\controllers;
 
+use app\modules\i18na12n\models\ChangePasswordForm;
 use Yii;
 use app\models\User;
 use yii\data\ActiveDataProvider;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -20,6 +22,16 @@ class UsersController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'actions' => ['index', 'view', 'create', 'update', 'change-password', 'delete'],
+                        'roles' => ['users.manage'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -64,6 +76,7 @@ class UsersController extends Controller
     public function actionCreate()
     {
         $model = new User();
+        $model->setScenario('create');
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->uuid]);
@@ -89,6 +102,29 @@ class UsersController extends Controller
         }
 
         return $this->render('update', [
+            'model' => $model,
+        ]);
+    }
+
+    /**
+     * Changes the password for a user.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param string $id
+     * @return mixed
+     */
+    public function actionChangePassword($id)
+    {
+        $userModel = $this->findModel($id);
+        $model = new ChangePasswordForm();
+        $model->email = $userModel->email;
+        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+            $userModel->setScenario('change-password');
+            $userModel->password = md5($model->password);
+            $userModel->save();
+            return $this->redirect(['view', 'id' => $userModel->uuid]);
+        }
+
+        return $this->render('change-password', [
             'model' => $model,
         ]);
     }
