@@ -137,17 +137,22 @@ class UsersController extends Controller
      */
     public function actionRoles($id)
     {
-        $userModel = $this->findModel($id);
-        $model = new ChangePasswordForm();
-        $model->email = $userModel->email;
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-            $userModel->setScenario('change-password');
-            $userModel->password = md5($model->password);
-            $userModel->save();
-            return $this->redirect(['view', 'id' => $userModel->uuid]);
+        $model = $this->findModel($id);
+
+        echo "<pre>";
+        print_r($model);
+        echo "</pre>";
+        die("As");
+
+        if ($model->load(Yii::$app->request->post()))
+        {
+            if ($model->save())
+            {
+                return $this->redirect(['view', 'id' => $model->uuid]);
+            }
         }
 
-        return $this->render('change-password', [
+        return $this->render('_roles_form', [
             'model' => $model,
         ]);
     }
