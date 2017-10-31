@@ -14,15 +14,23 @@ class m171031_082857_admin_user extends Migration
     public function safeUp()
     {
         $u = new User();
-        $u->email = "admin@localhost";
-        $u->name = "Administrator";
+        $u->email = "admin@example.com";
+       $u->name = "Administrator";
         $u->password = md5("Password");
-        $u->save();
+        if (!$u->save()) {
+            print_r($u->errors);
+            return false;
+        }
 
         $auth = Yii::$app->authManager;
+
         $root = $auth->createRole('root');
         $auth->add($root);
         $auth->assign($root, $u->getId());
+
+        $usersManage = $auth->createRole('users.manage');
+        $auth->add($usersManage);
+        $auth->addChild($root, $usersManage);
     }
 
     /**

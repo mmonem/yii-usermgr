@@ -22,12 +22,6 @@ class m171007_120635_users_table extends Migration
             'auth_key' => $this->string()->notNull(),
             'PRIMARY KEY(uuid)',
         ], $tableOptions);
-
-        $this->execute('
-        CREATE TRIGGER before_insert_user
-          BEFORE INSERT ON user
-          FOR EACH ROW
-          SET new.uuid = uuid();');
     }
 
     /**

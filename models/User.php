@@ -1,6 +1,7 @@
 <?php
 
 namespace app\modules\usersadmin\models;
+use Faker\Provider\Uuid;
 use Yii;
 use yii\base\NotSupportedException;
 
@@ -60,6 +61,7 @@ class User extends \yii\db\ActiveRecord implements \yii\web\IdentityInterface
         {
             if ($this->isNewRecord)
             {
+                $this->uuid = Uuid::uuid();
                 $this->auth_key = Yii::$app->getSecurity()->generateRandomString(255);
             }
             return true;
