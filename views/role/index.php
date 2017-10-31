@@ -1,6 +1,6 @@
 <?php
 
-use app\models\User;
+use app\modules\usersadmin\models\User;
 use yii\data\ActiveDataProvider;
 use yii\grid\GridView;
 use yii\helpers\Html;

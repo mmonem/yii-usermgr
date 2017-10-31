@@ -3,8 +3,8 @@
 namespace app\modules\usersadmin\controllers;
 
 use app\modules\i18na12n\models\ChangePasswordForm;
+use app\modules\usersadmin\models\User;
 use Yii;
-use app\models\User;
 use yii\data\ActiveDataProvider;
 use yii\filters\AccessControl;
 use yii\web\Controller;
